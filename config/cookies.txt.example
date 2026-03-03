@@ -1,0 +1,10 @@
+# B站登录 Cookie 配置文件示例（本文件不含真实 Cookie，可安全提交）
+#
+# 使用方式：
+#   1. 复制本文件为 cookies.txt 并放到 ~/.config/danmu_sender/cookies.txt
+#   2. 在浏览器登录 bilibili.com → F12 → 应用 → Cookie → 复制 SESSDATA 和 bili_jct
+#   3. 在下方填写格式（一行，分号分隔），或直接粘贴整段 Cookie
+#
+# 格式示例（请勿在此填写真实值）：
+# SESSDATA=; bili_jct=
+

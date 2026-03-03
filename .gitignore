@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+
+# 日志（保留目录结构，不提交日志文件）
+runtime/logs/*.log
+runtime/logs/*.log.*
+
+# 本地配置与敏感信息（用户 Cookie 切勿提交到仓库）
+.config/
+**/cookies.txt
+*.local
+.env
+.env.*
+
+# IDE / 系统
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 任务说明（不提交到仓库）
+task.md
