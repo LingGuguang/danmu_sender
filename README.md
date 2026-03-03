@@ -38,6 +38,7 @@ python main.py
 - **选择直播间**：输入列表中的序号；输入 `close` 退出程序。
 - **发送弹幕**：
   - 输入内容后回车：发送弹幕（超过 30 字会自动截断）。
+  - 支持 **文本转 emoji**：输入 `[跳舞]`、`[爱心]`、`[笑]`、`[666]` 等会自动替换为对应 emoji 后发送（输入 `help-emoji` 可查看完整映射表）。
   - 直接回车：仅重新输入，不发送。
   - 输入 `exit`：返回「选择直播间」界面，可换一个房间。
   - 输入 `close`：退出程序。
@@ -48,18 +49,22 @@ python main.py
 
 1. **本机 Chrome/Chromium**：若程序与浏览器在同一台机器且 Chrome 未运行，可自动读取（Linux 下 Chrome 运行时无法读取，会提示）。
 2. **请求 B 站主页**：模仿浏览器访问主页，仅能拿到匿名 Cookie，无法发弹幕，仅作兜底。
-3. **配置文件**：从浏览器复制 Cookie 写入 `~/.config/danmu_sender/cookies.txt`。
+3. **配置文件**：从浏览器复制 Cookie 写入 `~/.config/danmu_sender/cookies.txt`。仓库内提供空模板 `config/cookies.txt.example`（无真实 Cookie，可安全提交），可复制后填写。
 
 ### 手动配置 Cookie（推荐在远程服务器或无法读 Chrome 时）
 
 1. 在**本机**浏览器打开 https://www.bilibili.com 并登录。
 2. 按 F12 → **应用 / Application** → **Cookie** → 选择 `https://www.bilibili.com`。
 3. 复制 **SESSDATA** 和 **bili_jct** 的值（或整条 Cookie 字符串）。
-4. 在运行程序的机器上创建配置文件：
+4. 在运行程序的机器上创建配置文件（可复用仓库中的空模板）：
    ```bash
    mkdir -p ~/.config/danmu_sender
-   # 编辑 cookies.txt，格式示例（一行，分号分隔）：
-   # SESSDATA=你的SESSDATA值; bili_jct=你的bili_jct值
+   # 方式一：从仓库示例复制（仅格式说明，无真实内容）
+   cp config/cookies.txt.example ~/.config/danmu_sender/cookies.txt
+   # 再编辑填入真实 Cookie
+   nano ~/.config/danmu_sender/cookies.txt
+   # 方式二：直接新建并编辑
+   # 格式：SESSDATA=你的值; bili_jct=你的值
    nano ~/.config/danmu_sender/cookies.txt
    ```
 
@@ -80,6 +85,8 @@ danmu_sender/
 ├── requirements.txt
 ├── run.sh                 # 一键运行（可选更新依赖）
 ├── main.py                # 入口
+├── config/
+│   └── cookies.txt.example  # Cookie 配置示例（无真实内容，可提交）
 ├── runtime/
 │   └── logs/              # 日志目录
 └── danmu_sender/
@@ -87,6 +94,7 @@ danmu_sender/
     ├── __main__.py
     ├── logging_config.py  # 日志配置（500MB 切分）
     ├── cookie_loader.py   # Cookie 加载（Chrome / 请求 B 站 / 文件）
+    ├── emoji_map.py       # 文本→emoji 映射（[跳舞]→💃 等）
     ├── bilibili_api.py    # B 站 API：关注直播列表、发送弹幕、真实房间号
     └── cli.py             # 终端交互
 ```

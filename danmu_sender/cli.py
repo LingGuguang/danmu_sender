@@ -1,6 +1,13 @@
 """终端交互：展示关注直播列表、选择直播间、输入并发送弹幕。"""
 from .bilibili_api import get_following_live_list, send_danmu
 from .cookie_loader import get_last_chrome_failure, load_cookie
+from .emoji_map import (
+    replace_text_emoji,
+    TEXT_TO_EMOJI,
+    get_emoji_help_lines,
+    get_unmatched_brackets,
+    get_available_emoji_keys,
+)
 from .logging_config import setup_logging, get_logger
 
 MAX_MSG_LEN = 30
@@ -57,8 +64,10 @@ def run() -> None:
     uname = lives[idx - 1]["uname"]
     logger.info("用户选择直播间 room_id=%s uname=%s", room_id, uname)
     print(f"\n已选择: {uname}")
+    for line in get_emoji_help_lines():
+        print(line)
     while True:
-        msg = input("请输入要发送的弹幕（最多 30 字；close=退出程序，exit=换房间，空=重新输入）: ").strip()
+        msg = input("请输入要发送的弹幕（最多 30 字；close=退出，exit=换房间，空=重输，help-emoji=查看映射）: ").strip()
         if msg.lower() == "close":
             logger.info("用户输入 close，退出程序")
             print("已退出。")
@@ -67,9 +76,25 @@ def run() -> None:
             logger.info("用户输入 exit，回到选择直播间")
             print("返回选择直播间。\n")
             break
+        if msg.lower() == "help-emoji":
+            print("--- 文本 → emoji 映射表 ---")
+            for k, v in sorted(TEXT_TO_EMOJI.items(), key=lambda x: -len(x[0])):
+                print(f"  {k} → {v}")
+            print()
+            continue
         if not msg:
             print("弹幕不能为空，请重新输入。")
             continue
+        orig = msg
+        msg = replace_text_emoji(msg)
+        unmatched = get_unmatched_brackets(msg)
+        if unmatched:
+            print("无法识别的 emoji 关键词（未发送）:", ", ".join(unmatched))
+            print("可用关键词:", ", ".join(get_available_emoji_keys()))
+            print()
+            continue
+        if msg != orig:
+            print(f"  → 将发送: {msg}")
         if len(msg) > MAX_MSG_LEN:
             print(f"超过 {MAX_MSG_LEN} 字，已截断。")
             msg = msg[:MAX_MSG_LEN]
